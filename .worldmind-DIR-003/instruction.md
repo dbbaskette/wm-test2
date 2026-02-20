@@ -14,6 +14,30 @@ Create the ToDoService class.
 
 Create a Java class named ToDoService with methods for creating, retrieving, updating, and deleting ToDoItem objects. Use an in-memory ArrayList to store the ToDoItem objects. Implement the following methods: createToDoItem, getAllToDoItems, getToDoItemById, updateToDoItem, and deleteToDoItem. The createToDoItem method should generate a unique ID for each new ToDoItem. The getToDoItemById method should return null if no item with the given ID exists.
 
+## Retry Context (from previous attempt)
+
+Retry for DIR-003: Review score 3/10 below threshold (minimum 7)
+
+## Review Feedback (score: 3/10)
+
+**Summary:** Functional, but with clear improvements needed for thread-safety, API consistency, and validation to be production-ready. The core functionality is implemented, but the design choices could lead to issues under concurrency and with larger data sets. Implement the suggested changes to reach a higher robustness and maintainability level.
+
+**Issues to fix:**
+- Thread safety: The current implementation is not thread-safe, which can lead to data corruption in concurrent environments.
+- Return value semantics and consistency: Some methods return null when not found, while others use Optional. Inconsistent API design can confuse consumers.
+- Mutability and exposure: Returning internal objects directly can permit external mutation of internal state.
+- Naming consistency: The project uses ToDoItem as the model. Ensure all code references consistently use ToDoItem.
+- Validation and business rules: There is little to no input validation (null/empty title, null dueDate, etc.).
+- Test coverage: No tests are present in the diff context.
+
+**Suggestions:**
+- Make storage thread-safe and scalable: Replace the internal List with a ConcurrentHashMap<Long, ToDoItem> and use an AtomicLong for ID generation.
+- Add input validation: Reject null or empty titles and validate dueDate.
+- Improve return semantics for consistency: Prefer Optional<T> for lookups.
+- Add unit tests for each CRUD operation and edge cases.
+- If used within a DI framework, annotate with @Service (Spring) or equivalent.
+
+
 ## Project Context
 
 - **Language:** unknown

@@ -1,112 +1,95 @@
 package com.example.todolist.service;
 
 import com.example.todolist.model.ToDoItem;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ToDoService {
 
-  // In-memory storage for ToDoItem objects
-  private final List<ToDoItem> items = new ArrayList<>();
-  private long currentId = 0L;
+  // Thread-safe in-memory storage for ToDoItems
+  private final ConcurrentHashMap<Long, ToDoItem> items = new ConcurrentHashMap<>();
+  private final AtomicLong idCounter = new AtomicLong(0);
 
-  // Generate a sequential unique ID for new items
-  private synchronized long nextId() {
-    return ++currentId;
+  // Create a defensive clone to prevent external mutation of internal state
+  private ToDoItem cloneItem(ToDoItem item) {
+    if (item == null) {
+      return null;
+    }
+    ToDoItem clone = new ToDoItem(item.getDescription(), item.getDueDate(), item.getPriority(), item.getCategory());
+    clone.setId(item.getId());
+    clone.setCompleted(item.isCompleted());
+    return clone;
   }
 
-  /**
-   * Create a new ToDoItem, assigning it a unique ID.
-   * The provided item should have description, dueDate, priority, and category set.
-   * The method will set the generated ID on the item and store it in memory.
-   *
-   * @param item ToDoItem without an ID
-   * @return The same item instance with ID populated, or null if input is null
-   */
+  // Create a new ToDoItem with an auto-generated unique ID
   public ToDoItem createToDoItem(ToDoItem item) {
     if (item == null) {
       return null;
     }
-    long id = nextId();
+    // Basic validation
+    if (item.getDescription() == null || item.getDescription().trim().isEmpty()) {
+      return null;
+    }
+    if (item.getDueDate() == null) {
+      return null;
+    }
+    if (item.getPriority() == null) {
+      return null;
+    }
+    long id = idCounter.incrementAndGet();
     item.setId(id);
-    items.add(item);
-    return item;
+    items.put(id, item);
+    return cloneItem(item);
   }
 
-  /**
-   * Retrieve all ToDoItems.
-   * Returns a copy to prevent external modification of internal state.
-   *
-   * @return List of all ToDoItems
-   */
+  // Retrieve all ToDoItems as defensive copies
   public List<ToDoItem> getAllToDoItems() {
-    return new ArrayList<>(items);
+    return items.values().stream().map(this::cloneItem).collect(Collectors.toList());
   }
 
-  /**
-   * Retrieve a ToDoItem by its ID.
-   * Returns null if no item with the given ID exists.
-   *
-   * @param id ID of the ToDoItem
-   * @return ToDoItem or null
-   */
+  // Retrieve a ToDoItem by ID; returns null if not found
   public ToDoItem getToDoItemById(Long id) {
     if (id == null) {
       return null;
     }
-    for (ToDoItem item : items) {
-      if (id.equals(item.getId())) {
-        return item;
-      }
-    }
-    return null;
+    ToDoItem item = items.get(id);
+    return cloneItem(item);
   }
 
-  /**
-   * Update an existing ToDoItem. The item must have a valid ID.
-   * If found, updates the fields of the existing item and returns it.
-   * Returns null if no item with the given ID exists.
-   *
-   * @param updatedItem ToDoItem with updated fields and a valid ID
-   * @return Updated ToDoItem or null if not found
-   */
+  // Update an existing ToDoItem. Returns a clone of the updated item or null if not found
   public ToDoItem updateToDoItem(ToDoItem updatedItem) {
     if (updatedItem == null || updatedItem.getId() == null) {
       return null;
     }
-    for (int i = 0; i < items.size(); i++) {
-      ToDoItem existing = items.get(i);
-      if (updatedItem.getId().equals(existing.getId())) {
-        // Update fields
-        existing.setDescription(updatedItem.getDescription());
-        existing.setDueDate(updatedItem.getDueDate());
-        existing.setPriority(updatedItem.getPriority());
-        existing.setCategory(updatedItem.getCategory());
-        existing.setCompleted(updatedItem.isCompleted());
-        return existing;
-      }
+    Long id = updatedItem.getId();
+    ToDoItem existing = items.get(id);
+    if (existing == null) {
+      return null;
     }
-    return null;
+    // Apply updates (only non-null fields are updated). If a field is explicitly set null, it is ignored to preserve existing data.
+    if (updatedItem.getDescription() != null) {
+      existing.setDescription(updatedItem.getDescription());
+    }
+    if (updatedItem.getDueDate() != null) {
+      existing.setDueDate(updatedItem.getDueDate());
+    }
+    if (updatedItem.getPriority() != null) {
+      existing.setPriority(updatedItem.getPriority());
+    }
+    if (updatedItem.getCategory() != null) {
+      existing.setCategory(updatedItem.getCategory());
+    }
+    existing.setCompleted(updatedItem.isCompleted());
+    return cloneItem(existing);
   }
 
-  /**
-   * Delete a ToDoItem by ID.
-   * Returns true if deletion occurred, false if no item with the ID exists.
-   *
-   * @param id ID of the ToDoItem to delete
-   * @return boolean indicating success
-   */
+  // Delete a ToDoItem by ID
   public boolean deleteToDoItem(Long id) {
     if (id == null) {
       return false;
     }
-    for (int i = 0; i < items.size(); i++) {
-      if (id.equals(items.get(i).getId())) {
-        items.remove(i);
-        return true;
-      }
-    }
-    return false;
+    return items.remove(id) != null;
   }
 }
