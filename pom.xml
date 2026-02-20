@@ -18,6 +18,8 @@
   </properties>
 
   <dependencies>
+  <!-- Managed by Spring Boot BOM (parent) -->
+
     <!-- Web starter provides Spring MVC + embedded Tomcat and REST support -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

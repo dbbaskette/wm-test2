@@ -12,6 +12,8 @@ Add the necessary Spring Framework dependencies to the pom.xml file, ensuring th
 
 ## Additional Context
 
+MERGE CONFLICT RETRY: Your previous branch had conflicts with main. Start fresh from the current main branch.
+
 Add the following dependencies to the pom.xml file, ensuring compatibility with the Spring Boot version identified in the previous step:
 
 - spring-boot-starter-web
