@@ -41,4 +41,49 @@
       </plugin>
     </plugins>
   </build>
+  <groupId>com.block.todo</groupId>
+  <artifactId>todo-api</artifactId>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+
+  <name>todo-api</name>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <!-- Spring Web provides @RestController, @RequestMapping, etc. -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>5.3.26</version>
+    </dependency>
+
+    <!-- Spring Context (core DI) -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>5.3.26</version>
+    </dependency>
+
+    <!-- Jackson for JSON (used by Spring for message conversion) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.15.0</version>
+    </dependency>
+  </dependencies>
 </project>
