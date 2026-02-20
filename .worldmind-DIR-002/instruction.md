@@ -21,6 +21,32 @@ Add the following dependencies to the pom.xml file, ensuring compatibility with 
 
 These dependencies should resolve the missing package and symbol errors in WebConfig.java. Ensure the dependencies are added within the `<dependencies>` tag in pom.xml.
 
+## Retry Context (from previous attempt)
+
+Retry for DIR-002: Review score 6/10 below threshold (minimum 7)
+
+## Review Feedback (score: 6/10)
+
+**Summary:** The DIR-002 changes appear to wire up a Spring-based backend with a React frontend and update deployment/config files. A significant structural issue stands out: there are two distinct ToDoService implementations in different packages, which can cause bean conflicts and inconsistent behavior. Other changes (dependency versions, config, and deployment) look plausible at a high level but require concrete verification and tests to confirm functional correctness and secure deployment.
+
+**Issues to fix:**
+- Duplicate ToDoService implementations: Observed two ToDoService implementations in different packages (com.block.todo and com/example/todolist/service/ToDoService.java). Risk: two beans with the same logical role could collide at startup, or cause diverging business logic. Recommendation: consolidate to a single service module. If multiple modules are intentional, refactor to a shared interface in a common module and ensure only one concrete bean is active (use @Primary or @Qualifier as needed).
+- Dependency and version alignment (pom.xml): The directive mentions adding necessary Spring Framework dependencies compatible with the identified Spring Boot version. Without seeing the pom.xml, risk exists for version drift, missing starter dependencies, or conflicting transitive versions. Recommendation: verify that pom.xml uses a Spring Boot parent (or a consistent BOM), includes spring-boot-starter-web (and any data/rest dependencies you actually use), and that all Spring dependencies align with the Boot version. Run mvn dependency:tree to surface conflicts.
+- Backend/frontend API alignment: Frontend files (App.js, ToDoForm.js, ToDoItem.js, ToDoList.js, index.js) were modified alongside backend changes. Risk: mismatched API endpoints, path parameters, or CORS issues between frontend and backend. Recommendation: ensure a single, well-documented API contract (endpoints, request/response shapes). Add a simple integration test or a Postman/Swagger check to verify frontend-backend calls.
+- WebConfig and security considerations: WebConfig.java was modified; potential changes to CORS, interceptors, or security settings. Recommendation: confirm CORS is correctly scoped (origins, methods, headers), especially if frontend runs on a different port/host. If security is a concern, ensure endpoints are secured appropriately and not exposed publicly in production.
+- Deployment manifest: manifest.yml updated. Ensure deployment config matches the application type (Java app vs Staticfile vs Node app). Important: If this is a Java app, manifest.yml should point to the built JAR (target/*.jar) and use the correct route (default-route: true for static apps only if applicable). Recommendation: verify the manifest sections (default-route, path to jar, buildpack selection) match the actual deployment environment. If using Cloud Foundry, confirm the Java buildpack and jar path.
+- Testing coverage: Test results: No test results available. Recommendation: add unit tests for ToDoService/ToDoController and integration tests for REST endpoints. Include frontend smoke tests or a small e2e scenario to ensure UI can create/read/update/delete items end-to-end.
+- Code quality and maintenance: If there are multiple modules sharing similar DTOs or entities (e.g., ToDoItem), consider extracting common models to a shared module to avoid duplication and ensure consistency. Ensure proper error handling in controllers (use ResponseEntity with appropriate status codes, validate inputs with @Valid and bean validation).
+
+**Suggestions:**
+- Resolve the duplicate service issue: Choose a single canonical ToDoService implementation. If multi-module architecture is desired, extract a common interface (ToDoService) into a shared module and have one concrete implementation provided per build, using qualifiers to select the active one at runtime.
+- Harden dependency management: Reconcile pom.xml with a BOM or Spring Boot parent. Run mvn clean verify and mvn dependency:tree to detect version conflicts.
+- Strengthen API contracts: Document API endpoints (e.g., via Swagger/OpenAPI) and ensure frontend calls align exactly with the contract. Add basic input validation and meaningful error responses (400/422 for invalid input, 404 where appropriate).
+- Improve tests: Add unit tests for controllers/services (mocked dependencies). Add an integration test that spins up an in-memory DB (if applicable) and exercises REST endpoints. Consider a basic frontend test that hits the backend API (end-to-end minimal test).
+- Validate deployment config: Ensure manifest.yml aligns with the actual build outputs (jar path, staticfile root if used, route configurations). If static frontend is served by the backend, ensure proper resource handling and caching headers.
+- Improve naming consistency: Align package/module naming to clearly reflect the app scope (e.g., todo-api, frontend-todo) to reduce confusion between com.block.todo and com.example.todolist packages.
+
+
 ## Project Context
 
 - **Language:** unknown
