@@ -149,3 +149,4 @@ drwxr-xr-x 2 centurion centurion   51 Feb 20 01:35 .worldmind-DIR-006
 -rw-r--r-- 1 centurion centurion 8419 Feb 20 01:35 SPEC.md
 drwxr-xr-x 3 centurion centurion   17 Feb 20 01:35 frontend
 drwxr-xr-x 3 centurion centurion   18 Feb 20 01:35 src
+GOOSE_EXIT_CODE=0

@@ -1809,3 +1809,435 @@ command: git status --porcelain; echo DONE; git add -A; git status --porcelain; 
 ?? .worldmind-DIR-006/
 ?? src/main/java/com/block/todo/config/
 DONE
+A  .worldmind-DIR-006/diagnostics.log
+A  .worldmind-DIR-006/goose-output.log
+A  .worldmind-DIR-006/instruction.md
+A  src/main/java/com/block/todo/config/WebConfig.java
+[worldmind/DIR-006 649111e] feat(webconfig): add WebConfig for CORS and port 8080
+4 files changed, 2253 insertions(+)
+create mode 100644 .worldmind-DIR-006/diagnostics.log
+create mode 100644 .worldmind-DIR-006/goose-output.log
+create mode 100644 .worldmind-DIR-006/instruction.md
+create mode 100644 src/main/java/com/block/todo/config/WebConfig.java
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "?? .worldmind-DIR-006/\n?? src/main/java/com/block/todo/config/\nDONE\nA  .worldmind-DIR-006/diagnostics.log\nA  .worldmind-DIR-006/goose-output.log\nA  .worldmind-DIR-006/instruction.md\nA  src/main/java/com/block/todo/config/WebConfig.java\n[worldmind/DIR-006 649111e] feat(webconfig): add WebConfig for CORS and port 8080\n 4 files changed, 2253 insertions(+)\n create mode 100644 .worldmind-DIR-006/diagnostics.log\n create mode 100644 .worldmind-DIR-006/goose-output.log\n create mode 100644 .worldmind-DIR-006/instruction.md\n create mode 100644 src/main/java/com/block/todo/config/WebConfig.java\nDONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: ls -la src/main/java/com/block/todo; echo DONE
+
+total 12
+drwxr-xr-x 3 centurion centurion   92 Feb 20 01:37 .
+drwxr-xr-x 3 centurion centurion   18 Feb 20 01:35 ..
+-rw-r--r-- 1 centurion centurion 1751 Feb 20 01:35 ToDoController.java
+-rw-r--r-- 1 centurion centurion 1125 Feb 20 01:35 ToDoItem.java
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "total 12\ndrwxr-xr-x 3 centurion centurion   92 Feb 20 01:37 .\ndrwxr-xr-x 3 centurion centurion   18 Feb 20 01:35 ..\n-rw-r--r-- 1 centurion centurion 1751 Feb 20 01:35 ToDoController.java\n-rw-r--r-- 1 centurion centurion 1125 Feb 20 01:35 ToDoItem.java\n-rw-r--r-- 1 centurion centurion 1053 Feb 20 01:35 ToDoService.java\ndrwxr-xr-x 2 centurion centurion   28 Feb 20 01:37 config\nDONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: sed -n '1,260p' src/main/java/com/block/todo/ToDoController.java
+
+package com.block.todo;
+import java.util.Optional;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "package com.block.todo;\n\nimport java.util.List;\nimport java.util.Optional;\n\nimport org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.web.bind.annotation.*;\n\n@RestController\n@RequestMapping(\"/api/todos\")\npublic class ToDoController {\n    private final ToDoService service;\n\n    public ToDoController(ToDoService service) {\n        this.service = service;\n    }\n\n    @PostMapping\n    public ResponseEntity<ToDoItem> create(@RequestBody ToDoItem item) {\n        ToDoItem created = service.create(item);\n        return new ResponseEntity<>(created, HttpStatus.CREATED);\n    }\n\n    @GetMapping\n    public ResponseEntity<List<ToDoItem>> getAll() {\n        List<ToDoItem> items = service.findAll();\n        return new ResponseEntity<>(items, HttpStatus.OK);\n    }\n\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<ToDoItem> getById(@PathVariable Long id) {\n        Optional<ToDoItem> item = service.findById(id);\n        return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))\n                   .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));\n    }\n\n    @PutMapping(\"/{id}\")\n    public ResponseEntity<ToDoItem> update(@PathVariable Long id, @RequestBody ToDoItem item) {\n        Optional<ToDoItem> updated = service.update(id, item);\n        return updated.map(value -> new ResponseEntity<>(value, HttpStatus.OK))\n                      .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));\n    }\n\n    @DeleteMapping(\"/{id}\")\n    public ResponseEntity<Void> delete(@PathVariable Long id) {\n        boolean deleted = service.delete(id);\n        return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);\n    }\n}\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: sed -n '1,260p' src/main/java/com/block/todo/ToDoItem.java
+
+package com.block.todo;
+public class ToDoItem {
+private Long id;
+private String description;
+private String title;
+private boolean completed;
+public ToDoItem() {
+}
+public ToDoItem(Long id, String title, String description, boolean completed) {
+this.id = id;
+this.title = title;
+this.description = description;
+this.completed = completed;
+}
+public ToDoItem(String title, String description, boolean completed) {
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "package com.block.todo;\n\npublic class ToDoItem {\n    private Long id;\n    private String title;\n    private String description;\n    private boolean completed;\n\n    public ToDoItem() {\n    }\n\n    public ToDoItem(Long id, String title, String description, boolean completed) {\n        this.id = id;\n        this.title = title;\n        this.description = description;\n        this.completed = completed;\n    }\n\n    public ToDoItem(String title, String description, boolean completed) {\n        this(null, title, description, completed);\n    }\n\n    public Long getId() {\n        return id;\n    }\n\n    public void setId(Long id) {\n        this.id = id;\n    }\n\n    public String getTitle() {\n        return title;\n    }\n\n    public void setTitle(String title) {\n        this.title = title;\n    }\n\n    public String getDescription() {\n        return description;\n    }\n\n    public void setDescription(String description) {\n        this.description = description;\n    }\n\n    public boolean isCompleted() {\n        return completed;\n    }\n\n    public void setCompleted(boolean completed) {\n        this.completed = completed;\n    }\n}\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg -n --hidden -S "WebConfig|Cors|server.port|@Configuration|WebMvcConfigurer|CrossOrigin|CORS|cors|spring.jackson|ToDo|Todo|ComBlock|block" -S -g src/main 2>/dev/null || true; echo DONE
+
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "DONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg -n --hidden -S "WebConfig|Cors|server.port|@Configuration|WebMvcConfigurer|CrossOrigin|CORS|cors|spring.jackson|ToDo|Todo|ComBlock|block" -S -g src/main 2>/dev/null || true; echo DONE
+
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "DONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg -n --hidden -S "class WebConfig|ToDo|Todo|WebMvcConfigurer|@Configuration|Cors|CORS|server.port|src/main/java|com.block.todo" -S -g src/main 2>/dev/null || true; echo DONE
+
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "DONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg -n --hidden -S "class WebConfig|@Configuration|WebMvcConfigurer|CorsRegistry|WebServerFactoryCustomizer|setPort" -S -g src/main/java 2>/dev/null || true; sed -n '1,260p' src/main/java/com/block/todo/config/WebConfig.java 2>/dev/null || true; ls -la src/main/java/com/block/todo/config; echo DONE
+
+package com.block.todo.config;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.annotation.Bean;
+/**
+* Web configuration for the Spring Boot application.
+* - Enables CORS for the React frontend during local development.
+* - Sets the embedded server port to 8080 (or another suitable port if needed).
+*/
+public class WebConfig implements WebMvcConfigurer {
+@Configuration
+// Allow CORS requests from common React development servers
+@Override
+public void addCorsMappings(CorsRegistry registry) {
+}
+.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+.allowedHeaders("*")
+* This uses a bean so it can be overridden by environment settings if needed.
+}
+total 4
+drwxr-xr-x 2 centurion centurion   28 Feb 20 01:37 .
+drwxr-xr-x 3 centurion centurion   92 Feb 20 01:37 ..
+-rw-r--r-- 1 centurion centurion 1463 Feb 20 01:37 WebConfig.java
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "package com.block.todo.config;\n\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.web.servlet.config.annotation.CorsRegistry;\nimport org.springframework.web.servlet.config.annotation.WebMvcConfigurer;\nimport org.springframework.boot.web.server.ConfigurableWebServerFactory;\nimport org.springframework.boot.web.server.WebServerFactoryCustomizer;\nimport org.springframework.context.annotation.Bean;\n\n/**\n * Web configuration for the Spring Boot application.\n * - Enables CORS for the React frontend during local development.\n * - Sets the embedded server port to 8080 (or another suitable port if needed).\n */\n@Configuration\npublic class WebConfig implements WebMvcConfigurer {\n    @Override\n    public void addCorsMappings(CorsRegistry registry) {\n        // Allow CORS requests from common React development servers\n        registry.addMapping(\"/api/**\")\n                .allowedOrigins(\"http://localhost:3000\", \"http://localhost:5173\")\n                .allowedMethods(\"GET\", \"POST\", \"PUT\", \"PATCH\", \"DELETE\", \"OPTIONS\")\n                .allowedHeaders(\"*\")\n                .allowCredentials(true);\n    }\n\n    /**\n     * Customize the embedded servlet container port.\n     * This uses a bean so it can be overridden by environment settings if needed.\n     */\n    @Bean\n    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {\n        return factory -> factory.setPort(8080);\n    }\n}\ntotal 4\ndrwxr-xr-x 2 centurion centurion   28 Feb 20 01:37 .\ndrwxr-xr-x 3 centurion centurion   92 Feb 20 01:37 ..\n-rw-r--r-- 1 centurion centurion 1463 Feb 20 01:37 WebConfig.java\nDONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg --version || true; echo DONE; which rg || true; echo DONE2
+
+bash: line 1: rg: command not found
+DONE
+DONE2
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "bash: line 1: rg: command not found\nDONE\nDONE2\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: rg -n --hidden -S "class WebConfig|async|controller|RestController|ToDo|Todo|Spring|Cors|server.port|@Configuration|WebMvcConfigurer|CrossOrigin|CORS|src/main/java|com.block.todo" -S -g src/main/java 2>/dev/null || true; echo DONE
+
+DONE
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "DONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+
+─── shell | developer ──────────────────────────
+command: ls -R src/main | head -n 200; ls -R src/main/java | head -n 200; echo DONE
+
+src/main:
+java
+src/main/java:
+com
+block
+src/main/java/com:
+example
+todo
+src/main/java/com/block:
+src/main/java/com/block/todo:
+ToDoController.java
+ToDoItem.java
+ToDoService.java
+ToDoService.java
+config
+src/main/java/com/block/todo/config:
+WebConfig.java
+src/main/java/com/example:
+todolist
+src/main/java/com/example/todolist:
+model
+src/main/java:
+com
+src/main/java/com/block:
+src/main/java/com:
+config
+block
+example
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "src/main:\njava\n\nsrc/main/java:\ncom\n\nsrc/main/java/com:\nblock\nexample\n\nsrc/main/java/com/block:\ntodo\n\nsrc/main/java/com/block/todo:\nToDoController.java\nToDoItem.java\nToDoService.java\nconfig\n\nsrc/main/java/com/block/todo/config:\nWebConfig.java\n\nsrc/main/java/com/example:\ntodolist\n\nsrc/main/java/com/example/todolist:\nmodel\nservice\n\nsrc/main/java/com/example/todolist/model:\nToDoItem.java\n\nsrc/main/java/com/example/todolist/service:\nToDoService.java\nsrc/main/java:\ncom\n\nsrc/main/java/com:\nblock\nexample\n\nsrc/main/java/com/block:\ntodo\n\nsrc/main/java/com/block/todo:\nToDoController.java\nToDoItem.java\nToDoService.java\nconfig\n\nsrc/main/java/com/block/todo/config:\nWebConfig.java\n\nsrc/main/java/com/example:\ntodolist\n\nsrc/main/java/com/example/todolist:\nmodel\nservice\n\nsrc/main/java/com/example/todolist/model:\nToDoItem.java\n\nsrc/main/java/com/example/todolist/service:\nToDoService.java\nDONE\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+Verified update summary
+
+- WebConfig.java created at: src/main/java/com/block/todo/config/WebConfig.java
+- Purpose: Spring Boot config for CORS and server port
+
+What WebConfig does
+
+- Enables CORS for the React frontend during local development
+  - Applies to API endpoints under /api/**
+  - Allows origins: http://localhost:3000 and http://localhost:5173
+  - Allows methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
+  - Allows all headers and supports credentials
+
+- Sets the embedded server port
+  - Configures the server port to 8080 via a WebServerFactoryCustomizer bean
+  - Bean approach allows overriding via environment if needed
+
+Key code (relevant excerpts)
+
+```java
+package com.block.todo.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.annotation.Bean;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:3000", "http://localhost:5173")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
+        return factory -> factory.setPort(8080);
+    }
+}
+```
+
+How to test locally
+
+- Start the app (e.g., via Maven/Gradle or your IDE)
+- From your React frontend (running on 3000 or 5173), make a request to the backend, e.g., fetch /api/todos
+- The browser should allow the request and you should receive the expected API response
+
+Notes and potential improvements
+
+- If your frontend runs on a different port, add it to allowedOrigins or externalize origins to application.properties or environment variables.
+- If you want to set the port via properties (instead of code), you can add server.port=8080 to application.properties.
+- If deploying to prod, consider tightening CORS or using a reverse proxy; you may also want to conditionally enable CORS only in development.
+
+If you’d like, I can:
+- Externalize the allowedOrigins and port to properties and wire them via @Value or a properties class
+- Add a quick health check or simple endpoint test to validate CORS in a browser/session
+- Add tests to verify CORS behavior for /api/** endpoints
