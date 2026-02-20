@@ -7,7 +7,7 @@ GOOSE_MAX_TURNS=50
 SSL_CERT_FILE=/tmp/ca-certificates.crt
 GOOSE_MODEL=gpt-5-nano
 GOOSE_MODE=auto
-GOOSE_CONTEXT_STRATEGY=summarize
+GOOSE_CONTEXT_STRATEGY=none
 GOOGLE_API_KEY=***
 === CONFIG ===
 extensions:
@@ -34,7 +34,7 @@ extensions:
     enabled: false
     type: builtin
 === INSTRUCTION ===
-13710 .worldmind-DIR-002/instruction.md
+14009 .worldmind-DIR-002/instruction.md
 === INSTRUCTION PREVIEW ===
 ## Reasoning Approach
 
@@ -42,7 +42,7 @@ extensions:
 - Consider edge cases and potential issues
 - Evaluate multiple approaches before choosing one
 === GOOSE VERSION ===
- 1.24.0
+ 1.25.0
 === GOOSE RUN HELP ===
 Execute commands from an instruction file or stdin
 
@@ -138,9 +138,9 @@ Options:
           Print help (see a summary with '-h')
 === WORKSPACE ===
 total 12
-drwxr-xr-x 1 centurion centurion   59 Feb 20 01:09 .
-drwxr-xr-x 1 root      root        57 Feb 20 01:09 ..
-drwxr-xr-x 8 centurion centurion  181 Feb 20 01:09 .git
-drwxr-xr-x 2 centurion centurion   51 Feb 20 01:09 .worldmind-DIR-002
--rw-r--r-- 1 centurion centurion 8419 Feb 20 01:09 SPEC.md
-GOOSE_EXIT_CODE=0
+drwxr-xr-x 1 centurion centurion   70 Feb 20 01:57 .
+drwxr-xr-x 1 root      root        57 Feb 20 01:57 ..
+drwxr-xr-x 8 centurion centurion  181 Feb 20 01:57 .git
+drwxr-xr-x 3 centurion centurion   93 Feb 20 01:57 .worldmind-DIR-002
+-rw-r--r-- 1 centurion centurion 8419 Feb 20 01:57 SPEC.md
+drwxr-xr-x 3 centurion centurion   18 Feb 20 01:57 src
