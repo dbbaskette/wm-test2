@@ -541,3 +541,98 @@ command: bash -lc 'git status --porcelain || true; git add -A && git commit -m "
 
 ?? .worldmind-DIR-004/
 ?? src/main/java/com/block/
+[worldmind/DIR-004 3129ce2] feat(todo): add ToDoController with REST endpoints
+6 files changed, 1092 insertions(+)
+create mode 100644 .worldmind-DIR-004/diagnostics.log
+create mode 100644 .worldmind-DIR-004/goose-output.log
+create mode 100644 .worldmind-DIR-004/instruction.md
+create mode 100644 src/main/java/com/block/todo/ToDoController.java
+create mode 100644 src/main/java/com/block/todo/ToDoItem.java
+create mode 100644 src/main/java/com/block/todo/ToDoService.java
+3129ce2 feat(todo): add ToDoController with REST endpoints
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "?? .worldmind-DIR-004/\n?? src/main/java/com/block/\n[worldmind/DIR-004 3129ce2] feat(todo): add ToDoController with REST endpoints\n 6 files changed, 1092 insertions(+)\n create mode 100644 .worldmind-DIR-004/diagnostics.log\n create mode 100644 .worldmind-DIR-004/goose-output.log\n create mode 100644 .worldmind-DIR-004/instruction.md\n create mode 100644 src/main/java/com/block/todo/ToDoController.java\n create mode 100644 src/main/java/com/block/todo/ToDoItem.java\n create mode 100644 src/main/java/com/block/todo/ToDoService.java\n3129ce2 feat(todo): add ToDoController with REST endpoints\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+Great — I’ve added the ToDo controller suite and wired it up to a simple in-memory service.
+
+Summary of what’s in the repo now
+- New REST endpoints for ToDo:
+  - POST /api/todos -> create a new item and return the created item with its generated ID
+  - GET /api/todos -> retrieve all items
+  - GET /api/todos/{id} -> retrieve a single item by ID (404 if not found)
+  - PUT /api/todos/{id} -> update an item by ID (404 if not found)
+  - DELETE /api/todos/{id} -> delete an item by ID (404 if not found)
+- Implementations:
+  - ToDoItem.java: simple POJO with id, title, description, completed
+  - ToDoService.java: in-memory store using ConcurrentHashMap, with create/findAll/findById/update/delete
+  - ToDoController.java: Spring REST controller exposing the endpoints and proper HTTP status codes
+- All code is under:
+  - src/main/java/com/block/todo/ToDoItem.java
+  - src/main/java/com/block/todo/ToDoService.java
+  - src/main/java/com/block/todo/ToDoController.java
+
+Notes on behavior (as implemented)
+- POST /api/todos
+  - Returns HTTP 201 Created with the created ToDoItem (including its generated ID)
+- GET /api/todos
+  - Returns HTTP 200 OK with list of all items
+- GET /api/todos/{id}
+  - Returns HTTP 200 OK with item if found
+  - Returns HTTP 404 Not Found if not found
+- PUT /api/todos/{id}
+  - Returns HTTP 200 OK with updated item if found
+  - Returns HTTP 404 Not Found if not found
+- DELETE /api/todos/{id}
+  - Returns HTTP 204 No Content if deleted
+  - Returns HTTP 404 Not Found if not found
+
+How you can test locally
+1) Build and run
+- If you’re using Maven:
+  - mvn clean package
+  - java -jar target/your-app.jar (adjust path to the produced JAR)
+- If you’re using Gradle or another setup, run your project accordingly.
+
+2) Example curl commands (adjust host/port if needed)
+- Create a new todo
+  - curl -X POST -H "Content-Type: application/json" -d '{"title":"Buy milk","description":"From store","completed":false}' http://localhost:8080/api/todos
+- Get all todos
+  - curl http://localhost:8080/api/todos
+- Get a todo by ID (e.g., 1)
+  - curl http://localhost:8080/api/todos/1
+- Update a todo (e.g., ID 1)
+  - curl -X PUT -H "Content-Type: application/json" -d '{"title":"Buy milk","description":"From store (2L)","completed":true}' http://localhost:8080/api/todos/1
+- Delete a todo (e.g., ID 1)
+  - curl -X DELETE http://localhost:8080/api/todos/1
+
+Edge cases and considerations
+- Validation: As currently implemented, the endpoints will accept any JSON that maps to ToDoItem. If you want more rigorous validation (e.g., non-empty title), you could add javax.validation annotations and @Valid in the controller.
+- Thread safety: The in-memory store uses ConcurrentHashMap and an AtomicLong for IDs, which is safe for concurrent access in tests and simple runs.
+- Persistence: Data is in-memory only. If you restart the app, data is lost. If needed, we could wire a JPA repository to persist to a database.
+- Error handling: PUT/DELETE return 404 when the item doesn’t exist, per PRD.
+
+Next steps (optional)
+- Add unit tests for ToDoService and integration tests for ToDoController.
+- Add input validation (e.g., @NotBlank for title) and error handlers.
+- Swap in a real database (JPA/Hibernate) for persistence across restarts.
+- Consider adding pagination for GET /api/todos if the list grows large.
+
+Would you like me to add validation, unit tests, or transition this to a real database-backed repository? If you want, I can also run through a quick end-to-end test plan and provide sample test code.
