@@ -1,0 +1,7 @@
+applications:
+- name: todo-api
+  default-route: true
+  memory: 512M
+  disk_quota: 1024M
+  buildpack: java_buildpack
+  path: target/todo-api-0.1.0.jar
