@@ -143,3 +143,4 @@ drwxr-xr-x 1 root      root        57 Feb 20 01:09 ..
 drwxr-xr-x 8 centurion centurion  181 Feb 20 01:09 .git
 drwxr-xr-x 2 centurion centurion   51 Feb 20 01:09 .worldmind-DIR-002
 -rw-r--r-- 1 centurion centurion 8419 Feb 20 01:09 SPEC.md
+GOOSE_EXIT_CODE=0

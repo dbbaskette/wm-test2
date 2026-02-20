@@ -429,3 +429,114 @@ command: git status --porcelain -uall || true; git add -A && git commit -m "feat
 ?? .worldmind-DIR-002/goose-output.log
 ?? .worldmind-DIR-002/instruction.md
 ?? src/main/java/com/example/todolist/model/ToDoItem.java
+[worldmind/DIR-002 d1d01d5] feat(todo): add ToDoItem model with Priority enum and required constructor/getters/setters
+4 files changed, 909 insertions(+)
+create mode 100644 .worldmind-DIR-002/diagnostics.log
+create mode 100644 .worldmind-DIR-002/goose-output.log
+create mode 100644 .worldmind-DIR-002/instruction.md
+create mode 100644 src/main/java/com/example/todolist/model/ToDoItem.java
+d1d01d5 feat(todo): add ToDoItem model with Priority enum and required constructor/getters/setters
+Annotated {
+    raw: Text(
+        RawTextContent {
+            text: "?? .worldmind-DIR-002/diagnostics.log\n?? .worldmind-DIR-002/goose-output.log\n?? .worldmind-DIR-002/instruction.md\n?? src/main/java/com/example/todolist/model/ToDoItem.java\n[worldmind/DIR-002 d1d01d5] feat(todo): add ToDoItem model with Priority enum and required constructor/getters/setters\n 4 files changed, 909 insertions(+)\n create mode 100644 .worldmind-DIR-002/diagnostics.log\n create mode 100644 .worldmind-DIR-002/goose-output.log\n create mode 100644 .worldmind-DIR-002/instruction.md\n create mode 100644 src/main/java/com/example/todolist/model/ToDoItem.java\nd1d01d5 feat(todo): add ToDoItem model with Priority enum and required constructor/getters/setters\n",
+            meta: None,
+        },
+    ),
+    annotations: Some(
+        Annotations {
+            audience: Some(
+                [
+                    User,
+                ],
+            ),
+            priority: Some(
+                0.0,
+            ),
+            last_modified: None,
+        },
+    ),
+}
+Great news! I’ve created the ToDoItem model class as requested.
+
+What I did
+- Added a public Java class at:
+  - src/main/java/com/example/todolist/model/ToDoItem.java
+- Included:
+  - Fields:
+    - Long id
+    - String description
+    - LocalDate dueDate
+    - Priority priority (enum with HIGH, MEDIUM, LOW)
+    - String category
+    - boolean completed
+  - Nested enum:
+    - public enum Priority { HIGH, MEDIUM, LOW }
+  - Constructor:
+    - ToDoItem(String description, LocalDate dueDate, Priority priority, String category)
+      - Initializes description, dueDate, priority, category
+      - Sets completed to false
+  - Getters and setters for all fields, including:
+    - getId() and setId(Long id)
+  - Class is public and located under package com.example.todolist.model
+
+What the class looks like (summary)
+```java
+package com.example.todolist.model;
+
+import java.time.LocalDate;
+
+public class ToDoItem {
+
+  public enum Priority { HIGH, MEDIUM, LOW }
+
+  private Long id;
+  private String description;
+  private LocalDate dueDate;
+  private Priority priority;
+  private String category;
+  private boolean completed;
+
+  public ToDoItem(String description, LocalDate dueDate, Priority priority, String category) {
+    this.description = description;
+    this.dueDate = dueDate;
+    this.priority = priority;
+    this.category = category;
+    this.completed = false;
+  }
+
+  // Getters and setters for all fields
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
+
+  public String getDescription() { return description; }
+  public void setDescription(String description) { this.description = description; }
+
+  public LocalDate getDueDate() { return dueDate; }
+  public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+
+  public Priority getPriority() { return priority; }
+  public void setPriority(Priority priority) { this.priority = priority; }
+
+  public String getCategory() { return category; }
+  public void setCategory(String category) { this.category = category; }
+
+  public boolean isCompleted() { return completed; }
+  public void setCompleted(boolean completed) { this.completed = completed; }
+}
+```
+
+Notes and considerations
+- LocalDate is used for dueDate as requested.
+- Priority is an internal enum with HIGH, MEDIUM, LOW.
+- id is optional at construction time and can be set later (e.g., by a service that assigns unique IDs).
+- The project’s environment in this workspace did not include a JDK toolchain (javac) to verify compilation locally, but the code is straightforward Java 17+ compatible and follows standard conventions.
+
+Next steps you might want
+- Implement a ToDoService with an in-memory ArrayList<ToDoItem> to manage items and generate unique IDs.
+- Create a ToDoController with REST endpoints (POST /api/todos, GET /api/todos, GET /api/todos/{id}, PUT /api/todos/{id}, DELETE /api/todos/{id}) per your SPEC.md.
+- Add WebConfig to enable CORS and ensure the backend runs on port 8080 (or your chosen port).
+- Wire up JSON serialization for LocalDate and the enum (Spring Boot with Jackson handles this by default).
+- Optionally add basic unit tests for the ToDoItem model (constructor, getters/setters).
+
+Would you like me to proceed with implementing the ToDoService, ToDoController, and WebConfig, plus a quick test suite to verify functionality? I can scaffold those next and keep them aligned with your SPEC. Also, if you want, I can add a small test or sample usage snippet to demonstrate creating a ToDoItem instance and serializing it to JSON.
