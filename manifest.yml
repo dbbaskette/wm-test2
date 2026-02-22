@@ -1,0 +1,12 @@
+applications:
+- name: todo-api
+  memory: 1G
+  disk_quota: 2G
+  instances: 1
+  path: target/todo-api-0.0.1-SNAPSHOT.jar
+  buildpack: java_buildpack
+  default-route: true
+  services:
+    - tododb-service
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
