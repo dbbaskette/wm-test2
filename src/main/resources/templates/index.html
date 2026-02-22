@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Tasks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; color: #333; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .card h2 { margin-top: 0; font-size: 1.25rem; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { padding: 8px 0; border-bottom: 1px solid #eee; }
+    .muted { color: #777; font-size: .9em; }
+    .empty { color: #888; font-style: italic; }
+    .task-title { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dashboard</h1>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="active-tasks-title">
+        <h2 id="active-tasks-title">Active Tasks</h2>
+        <ul>
+          <li th:each="task : ${activeTasks}">
+            <span class="task-title" th:text="${task.title}">Sample Task</span>
+            <span th:if="${task.dueDate != null}">
+              <span class="muted" th:text="| - due ${#temporals.format(task.dueDate, 'yyyy-MM-dd')}|"></span>
+            </span>
+          </li>
+        </ul>
+        <p class="empty" th:if="${#lists.isEmpty(activeTasks)}">No active tasks.</p>
+      </section>
+
+      <section class="card" aria-labelledby="completed-tasks-title">
+        <h2 id="completed-tasks-title">Completed Tasks</h2>
+        <ul>
+          <li th:each="task : ${completedTasks}">
+            <span class="task-title" th:text="${task.title}">Sample Task</span>
+            <span th:if="${task.completedDate != null}">
+              <span class="muted" th:text="| (completed: ${#temporals.format(task.completedDate, 'yyyy-MM-dd')})|"></span>
+            </span>
+          </li>
+        </ul>
+        <p class="empty" th:if="${#lists.isEmpty(completedTasks)}">No completed tasks.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
