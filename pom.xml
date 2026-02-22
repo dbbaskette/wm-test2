@@ -52,4 +52,5 @@
       </plugin>
     </plugins>
   </build>
+<!-- Cloud Foundry deployment artifacts (manifest.yml) will be added in a future task. This project is currently configured to support CF env-based datasource binding via environment variables. See application.properties for details. -->
 </project>
