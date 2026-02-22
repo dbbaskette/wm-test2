@@ -28,9 +28,7 @@
         <ul>
           <li th:each="task : ${activeTasks}">
             <span class="task-title" th:text="${task.title}">Sample Task</span>
-            <span th:if="${task.dueDate != null}">
-              <span class="muted" th:text="| - due ${#temporals.format(task.dueDate, 'yyyy-MM-dd')}|"></span>
-            </span>
+            <span th:if="${task.description != null}" class="muted" th:text="' - ' + ${task.description}"></span>
           </li>
         </ul>
         <p class="empty" th:if="${#lists.isEmpty(activeTasks)}">No active tasks.</p>
@@ -41,9 +39,7 @@
         <ul>
           <li th:each="task : ${completedTasks}">
             <span class="task-title" th:text="${task.title}">Sample Task</span>
-            <span th:if="${task.completedDate != null}">
-              <span class="muted" th:text="| (completed: ${#temporals.format(task.completedDate, 'yyyy-MM-dd')})|"></span>
-            </span>
+            <span th:if="${task.description != null}" class="muted" th:text="' - ' + ${task.description}"></span>
           </li>
         </ul>
         <p class="empty" th:if="${#lists.isEmpty(completedTasks)}">No completed tasks.</p>
